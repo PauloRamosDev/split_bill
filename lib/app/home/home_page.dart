@@ -16,11 +16,13 @@ class _HomePageState extends State<HomePage> {
       child: ListView(
         padding: EdgeInsets.all(16),
         children: <Widget>[
+          //titulo
           Text(
             'Split Bill',
             textScaleFactor: 2,
           ),
           Padding(padding: EdgeInsets.all(8)),
+          //card de detalhes
           Container(
             child: Stack(
               children: <Widget>[
@@ -99,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(8), color: Colors.black),
           ),
           Padding(padding: EdgeInsets.all(8)),
+          //slider de divisão
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -119,6 +122,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Padding(padding: EdgeInsets.all(8)),
+          //porcentagem da conta
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
@@ -128,13 +132,18 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              color: Colors.grey.shade200, width: 2)),
+                              color: index!=0?Colors.grey.shade300:Colors.green, width: 2)),
                       height: 50,
                       width: 70,
-                      child: Center(child: Text(" ${(index + 1) * 10} %")),
+                      child: Center(
+                          child: Text(
+                        " ${(index + 1) * 10} %",
+                        style: TextStyle(color: index!=0?Colors.grey.shade500:Colors.green),
+                      )),
                     )),
           ),
           Padding(padding: EdgeInsets.all(8)),
+          //teclado virtual
           GridView.count(
             childAspectRatio: 2,
             shrinkWrap: true,
@@ -146,12 +155,18 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                         height: 20,
-                        color: Colors.grey.shade200,
-                        child: Center(child: Text((index + 1).toString())),
+                        color: Colors.grey.shade50,
+                        child: Center(
+                            child: Text(
+                          (index + 1).toString(),
+                          textScaleFactor: 1.4,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )),
                       ),
                     )),
           ),
           Padding(padding: EdgeInsets.all(8)),
+          //botão split
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: RaisedButton(
