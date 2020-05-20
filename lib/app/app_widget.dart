@@ -8,7 +8,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: 'Split Bill',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(),
