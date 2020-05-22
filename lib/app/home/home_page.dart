@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:split_bill/app/home/home_controller.dart';
+import 'package:split_bill/app/home/widget_percent_count.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -7,7 +9,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var divisor = 2.0;
+  var bloc = BlocHome();
+
+  var listTeclado = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '<',
+    '0',
+    'C'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(color: Colors.white),
                       ),
                       Text(
-                        ' \$80,00',
+                        ' \$${bloc.getBill}',
                         textScaleFactor: 2,
                         style: TextStyle(color: Colors.white),
                       ),
@@ -53,17 +70,17 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'BILL              \$80,00 ',
+                        'BILL              \$${bloc.getBill} ',
                         textScaleFactor: 1,
                         style: TextStyle(color: Colors.white),
                       ),
                       Text(
-                        'FRIENDS      2',
+                        'FRIENDS      ${bloc.friends}',
                         textScaleFactor: 1,
                         style: TextStyle(color: Colors.white),
                       ),
                       Text(
-                        'TIPS(10%)   \$8,00',
+                        'TIPS(${bloc.currectPercent}%)   \$${bloc.tips}',
                         textScaleFactor: 1,
                         style: TextStyle(color: Colors.white),
                       ),
@@ -109,39 +126,27 @@ class _HomePageState extends State<HomePage> {
               Slider(
                 activeColor: Colors.black,
                 inactiveColor: Colors.grey.shade400,
-                value: divisor,
+                value: bloc.friends.toDouble(),
                 onChanged: (change) {
                   setState(() {
-                    divisor = change;
+                    bloc.friends = change.toInt();
                   });
                 },
                 min: 2.0,
                 max: 10.0,
               ),
-              Text(divisor.toInt().toString()),
+              Text(
+                bloc.friends.toString(),
+                textScaleFactor: 1.3,
+              ),
             ],
           ),
           Padding(padding: EdgeInsets.all(8)),
           //porcentagem da conta
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: List.generate(
-                4,
-                (index) => Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: index!=0?Colors.grey.shade300:Colors.green, width: 2)),
-                      height: 50,
-                      width: 70,
-                      child: Center(
-                          child: Text(
-                        " ${(index + 1) * 10} %",
-                        style: TextStyle(color: index!=0?Colors.grey.shade500:Colors.green),
-                      )),
-                    )),
-          ),
+          PercentCount(bloc.currectPercent, BlocHome.percents, (percent) {
+            bloc.currectPercent = percent;
+            setState(() {});
+          }),
           Padding(padding: EdgeInsets.all(8)),
           //teclado virtual
           GridView.count(
@@ -150,18 +155,21 @@ class _HomePageState extends State<HomePage> {
             physics: NeverScrollableScrollPhysics(),
             crossAxisCount: 3,
             children: List.generate(
-                12,
-                (index) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 20,
-                        color: Colors.grey.shade50,
-                        child: Center(
-                            child: Text(
-                          (index + 1).toString(),
-                          textScaleFactor: 1.4,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )),
+                listTeclado.length,
+                (index) => InkWell(
+                      onTap: () => teclado(listTeclado[index]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 20,
+                          color: Colors.grey.shade50,
+                          child: Center(
+                              child: Text(
+                            listTeclado[index],
+                            textScaleFactor: 1.4,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
+                        ),
                       ),
                     )),
           ),
@@ -170,7 +178,9 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                print('botao splint');
+              },
               child: Text(
                 'SPLIT BILL',
                 textScaleFactor: 1.2,
@@ -184,5 +194,18 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     ));
+  }
+
+  teclado(value) {
+    if (value == 'C') {
+      bloc.resetBill();
+      setState(() {});
+    } else if (value == '<') {
+      bloc.backBill();
+      setState(() {});
+    } else {
+      bloc.setBill = value;
+      setState(() {});
+    }
   }
 }
